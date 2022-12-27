@@ -77,11 +77,7 @@ const Navigation = () => {
     const items = [
         {path: "/", label: "Home"},
         {path: "/my-tasks", label: "My Tasks"},
-        {
-            path: "/blogs",
-            label: "Blogs",
-        },
-        {path: "/dashboard", label: "Dashboard", private: true},
+        {path: "/add-task", label: "Add Task"},
     ];
 
     function closeAuthDropdown() {

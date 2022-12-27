@@ -26,6 +26,7 @@ const taskState: TaskState = {
 
 function taskReducer(state = taskState, action: TaskActions) {
     let updatedTasks: Task[] = []
+    let findTaskIndex = -1
     switch (action.type) {
         case ActionTypes.FETCH_TASKS :
             return {
@@ -41,7 +42,7 @@ function taskReducer(state = taskState, action: TaskActions) {
 
         case ActionTypes.TOGGLE_FAVORITE :
             updatedTasks = [...state.tasks]
-            let findTaskIndex = updatedTasks.findIndex(task => task._id === action.payload)
+            findTaskIndex = updatedTasks.findIndex(task => task._id === action.payload)
             if (findTaskIndex === -1) {
                 updatedTasks[findTaskIndex].isFavorite = !updatedTasks[findTaskIndex].isFavorite
             }
@@ -62,15 +63,11 @@ function taskReducer(state = taskState, action: TaskActions) {
             }
 
 
-        case ActionTypes.DELETE :
+        case ActionTypes.DELETE:
             updatedTasks = [...state.tasks]
-            findTaskIndex = updatedTasks.findIndex(task => task._id === action.payload)
-            if (findTaskIndex === -1) {
-                updatedTasks.splice(findTaskIndex, 1)
-            }
             return {
                 ...state,
-                tasks: updatedTasks
+                tasks: updatedTasks.filter(task=>task._id !== action.payload)
             }
 
         default:

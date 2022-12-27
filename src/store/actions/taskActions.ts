@@ -24,13 +24,13 @@ export const fetchTasksAction = () => async (dispatch: Dispatch<FetchTasksAction
 }
 
 
-export const addTaskAction = (taskData: Task) => async (dispatch: Dispatch<AddTaskAction>) => {
+export const addTaskAction = (taskData: Task, callback: ()=>void) => async (dispatch: Dispatch<AddTaskAction>) => {
     try {
         let {data, status} = await api().post("/api/v1/tasks/add", taskData)
         if (status === 201) {
             dispatch({
                 type: ActionTypes.ADD_TASK,
-                payload: data.message
+                payload: data
             })
             callback && callback()
         }

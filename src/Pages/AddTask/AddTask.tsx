@@ -61,7 +61,7 @@ const AddTask = () => {
 
 
     return (
-        <div className="container">
+        <div className="container py-10">
             <div className="max-w-md mx-auto card">
                 <h1 className="text-3xl font-bold text-center">Add Task</h1>
 
