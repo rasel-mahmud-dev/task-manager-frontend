@@ -4,6 +4,9 @@ export enum ActionTypes{
     ADD_TASK = "ADD_TASK",
     FETCH_TASKS = "FETCH_TASKS",
     TOGGLE_TASK = "TOGGLE_TASK",
+    TOGGLE_FAVORITE = "TOGGLE_FAVORITE",
+    TOGGLE_COMPLETED = "TOGGLE_COMPLETED",
+    DELETE = "DELETE",
 }
 
 
@@ -17,4 +20,19 @@ export type AddTaskAction = {
     payload: Task
 }
 
-export type TaskActions = FetchTasksAction | AddTaskAction
+export type ToggleFavoriteAction = {
+    type: ActionTypes.TOGGLE_FAVORITE,
+    payload: string
+}
+
+export type ToggleCompleteAction = {
+    type: ActionTypes.TOGGLE_COMPLETED,
+    payload: string
+}
+
+export type DeleteAction = {
+    type: ActionTypes.DELETE,
+    payload: string
+}
+
+export type TaskActions = FetchTasksAction | AddTaskAction | ToggleFavoriteAction | ToggleCompleteAction | DeleteAction

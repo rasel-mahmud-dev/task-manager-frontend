@@ -9,7 +9,7 @@ const routes = createBrowserRouter([
         path: '/',
         element: <Main/>,
         children: [
-            {path: "/tasks", element: <MyTask/>},
+            {path: "/my-tasks", element: <MyTask/>},
             {path: "/add-task", element: <AddTask/>}
         ]
     }
