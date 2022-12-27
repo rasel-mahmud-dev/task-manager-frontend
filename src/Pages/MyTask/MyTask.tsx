@@ -1,41 +1,96 @@
-import React, {useEffect} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Task} from "../../store/reducers/taskReducer";
 import {AppDispatch, RootState} from "../../store";
-import {deleteAction, fetchTasksAction, toggleFavoriteAction} from "../../store/actions/taskActions";
+import {
+    fetchTasksAction,
+} from "../../store/actions/taskActions";
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
-import Ring from "../../components/Ring";
 import Button from "../../components/Button";
 import {Link} from "react-router-dom";
+import BgAnimation from "../../components/BgAnimation/BgAnimation";
+import RenderTask from "../../components/RenderTask";
 
 const MyTask = () => {
     const {taskState: {tasks}} = useSelector((state: RootState) => state)
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
-
         dispatch(fetchTasksAction())
     }, [])
+
+
+    const tabs = [
+        {label: "Active List", render: renderCurrentList},
+        {label: "Completed", render: renderCompleted},
+        {label: "Deleted", render: renderDeleted},
+    ]
+
+    const [currentTab, setCurrentTab] = useState<{
+        render: ()=> ReactNode,
+        label: string
+    } | null>(null)
+
+
+    useEffect(()=>{
+        if(currentTab === null && tasks.length > 0){
+            setCurrentTab(tabs[0])
+        }
+    }, [tasks])
+
+
+
+    function renderCurrentList() {
+        return (
+            <>
+                <div className="card mx-auto bg-opacity-50 backdrop-blur">
+                    <h4 className="font-semibold text-xs uppercase">Starred</h4>
+                    {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && task.isFavorite) && (
+                        <RenderTask task={task} key={task._id}/>
+                    ))}
+                </div>
+
+                <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
+                    <h4 className="font-semibold text-xs uppercase">Not Starred</h4>
+                    {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && !task.isFavorite) && (
+                        <RenderTask task={task} key={task._id}/>
+                    ))}
+                </div>
+            </>
+        )
+    }
+
+    function renderCompleted() {
+        return <>
+            <h4 className="font-semibold text-xs uppercase mt-10">Completed</h4>
+            <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
+                <h4 className="font-semibold text-xs uppercase">Not Starred</h4>
+                {tasks.map((task: Task) => !task.isDeleted && task.isCompleted && (
+                    <RenderTask task={task} key={task._id}/>
+                ))}
+            </div>
+        </>
+    }
+
+    function renderDeleted() {
+        return <>
+            <h4 className="font-semibold text-xs uppercase mt-10">Recent Deleted Task</h4>
+            <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
+                {tasks.map((task: Task) => task.isDeleted && (
+                    <RenderTask className="opacity-40" task={task} key={task._id}/>
+                ))}
+            </div>
+        </>
+    }
 
 
     return (
         <div className="container">
 
-            <ul className="background">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
+            <BgAnimation/>
+
 
             <div className="max-w-3xl mx-auto">
 
@@ -49,45 +104,25 @@ const MyTask = () => {
                     </Link>
                 </div>
 
-                <div className="card mx-auto bg-opacity-50 backdrop-blur">
 
-                    <h4 className="font-semibold text-xs uppercase">Starred</h4>
-                    {tasks.map((task: Task) => task.isFavorite && (
-                        <div key={task._id} className="flex justify-between py-4">
-                            <h1>{task.title}</h1>
-                            <div className="flex gap-x-2">
-                                <Ring className="hover:!bg-red-500" onClick={()=>dispatch(deleteAction(task._id as string))}>
-                                    <FontAwesomeIcon className="text-xs " icon={faTrash}/>
-                                </Ring>
-                                <Ring
-                                    onClick={() => dispatch(toggleFavoriteAction(task._id as string))}
-                                      className="!bg-blue-500 text-white">
-                                    <FontAwesomeIcon className="text-xs " icon={faStar}/>
-                                </Ring>
-                            </div>
+               <div className='card flex justify-between bg-opacity-50 backdrop-blur mb-4'>
+                   <div className="flex items-center gap-x-4">
+                       {tabs.map((tab) => (
+                           <li onClick={() => setCurrentTab(tab)}
+                               className={` text-sm font-semibold list-none cursor-pointer ${currentTab?.label === tab.label ? "text-blue-600 font-medium" : ""}`}>{tab.label}</li>
+                       ))}
+                   </div>
+                   <li className={`list-none cursor-pointer text-sm font-semibold `}>
+                       <Link to="/add-task">
+                           <FontAwesomeIcon className="text-xs mr-1" icon={faPlus} />
+                           Add
+                       </Link>
+                   </li>
+               </div>
 
-                        </div>
-                    ))}
-                </div>
-                <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
-                    <h4 className="font-semibold text-xs uppercase">Not Starred</h4>
+                { currentTab?.render() }
 
-                    {tasks.map((task: Task) => !task.isFavorite && (
-                        <div key={task._id} className="flex justify-between py-4">
-                            <h1>{task.title}</h1>
 
-                            <div className="flex gap-x-2">
-                                <Ring className="hover:!bg-red-500" onClick={()=>dispatch(deleteAction(task._id as string))}>
-                                    <FontAwesomeIcon className="text-xs " icon={faTrash}/>
-                                </Ring>
-                                <Ring onClick={() => dispatch(toggleFavoriteAction(task._id as string))}>
-                                    <FontAwesomeIcon className="text-xs " icon={faStar}/>
-                                </Ring>
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
             </div>
         </div>
     );

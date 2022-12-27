@@ -10,6 +10,7 @@ export interface Task {
     isFavorite: boolean
     date?: Date
     isCompleted: boolean
+    isDeleted: boolean
     comment?: string
     createdAt?: Date
     updatedAt?: Date
@@ -43,9 +44,10 @@ function taskReducer(state = taskState, action: TaskActions) {
         case ActionTypes.TOGGLE_FAVORITE :
             updatedTasks = [...state.tasks]
             findTaskIndex = updatedTasks.findIndex(task => task._id === action.payload)
-            if (findTaskIndex === -1) {
+            if (findTaskIndex !== -1) {
                 updatedTasks[findTaskIndex].isFavorite = !updatedTasks[findTaskIndex].isFavorite
             }
+            console.log(updatedTasks)
             return {
                 ...state,
                 tasks: updatedTasks
@@ -54,7 +56,7 @@ function taskReducer(state = taskState, action: TaskActions) {
         case ActionTypes.TOGGLE_COMPLETED :
             updatedTasks = [...state.tasks]
             findTaskIndex = updatedTasks.findIndex(task => task._id === action.payload)
-            if (findTaskIndex === -1) {
+            if (findTaskIndex !== -1) {
                 updatedTasks[findTaskIndex].isCompleted = !updatedTasks[findTaskIndex].isCompleted
             }
             return {
@@ -65,9 +67,13 @@ function taskReducer(state = taskState, action: TaskActions) {
 
         case ActionTypes.DELETE:
             updatedTasks = [...state.tasks]
+            findTaskIndex = updatedTasks.findIndex(task => task._id === action.payload)
+            if (findTaskIndex !== -1) {
+                updatedTasks[findTaskIndex].isDeleted = !updatedTasks[findTaskIndex].isDeleted
+            }
             return {
                 ...state,
-                tasks: updatedTasks.filter(task=>task._id !== action.payload)
+                tasks: updatedTasks
             }
 
         default:

@@ -29,11 +29,13 @@ const AddTask = () => {
     const [errorMessage, setErrorMessage] = useState("")
 
 
+    type Key  = keyof Task
     function handleChange(e: SyntheticEvent) {
         setErrorMessage("")
+        let target = e.target as HTMLInputElement
         setNewTaskData(prevState => ({
             ...prevState,
-            [e.target.name]: e.target.value
+            [target.name as Key]: target.value
         }))
     }
 
@@ -41,7 +43,7 @@ const AddTask = () => {
     function handleAddTask(e: SyntheticEvent) {
         e.preventDefault()
 
-        let requitedFields = ["title", "description"]
+        let requitedFields: Key[] = ["title", "description"]
         let errorMessage = ""
         requitedFields.forEach(field => {
             if (!newTaskData[field]) {

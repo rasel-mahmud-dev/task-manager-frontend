@@ -41,9 +41,9 @@ export const addTaskAction = (taskData: Task, callback: ()=>void) => async (disp
 
 
 // toggle task favorite
-export const toggleFavoriteAction = (taskId: string) => async (dispatch: Dispatch<ToggleFavoriteAction>) => {
+export const toggleFavoriteAction = (taskId: string, isFavorite: boolean) => async (dispatch: Dispatch<ToggleFavoriteAction>) => {
     try {
-        let {data, status} = await api().patch("/api/v1/tasks/toggle-favorite/" + taskId)
+        let {data, status} = await api().patch("/api/v1/tasks/toggle-favorite/" + taskId, {isFavorite})
         if (status === 201) {
             dispatch({
                 type: ActionTypes.TOGGLE_FAVORITE,
@@ -58,9 +58,9 @@ export const toggleFavoriteAction = (taskId: string) => async (dispatch: Dispatc
 
 
 // toggle task completed
-export const toggleCompleteAction = (taskId: string) => async (dispatch: Dispatch<ToggleCompleteAction>) => {
+export const toggleCompleteAction = (taskId: string, isCompleted: boolean) => async (dispatch: Dispatch<ToggleCompleteAction>) => {
     try {
-        let {data, status} = await api().patch("/api/v1/tasks/toggle-complete/" + taskId)
+        let {data, status} = await api().patch("/api/v1/tasks/toggle-completed/" + taskId, {isCompleted})
         if (status === 201) {
             dispatch({
                 type: ActionTypes.TOGGLE_COMPLETED,
@@ -76,9 +76,9 @@ export const toggleCompleteAction = (taskId: string) => async (dispatch: Dispatc
 
 
 // delete task action
-export const deleteAction = (taskId: string) => async (dispatch: Dispatch<DeleteAction>) => {
+export const deleteAction = (taskId: string, isDeleted: boolean) => async (dispatch: Dispatch<DeleteAction>) => {
     try {
-        let {data, status} = await api().delete("/api/v1/tasks/" + taskId)
+        let {data, status} = await api().patch("/api/v1/tasks/delete/" + taskId, {isDeleted})
         if (status === 201) {
             dispatch({
                 type: ActionTypes.DELETE,
