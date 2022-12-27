@@ -2,11 +2,11 @@ import {ActionTypes, TaskActions} from "../actionTypes";
 
 
 export interface Task {
+    _id?: string
     title: string,
     image: string,
     isCompleted: boolean
     comment?: string
-
 }
 
 interface TaskState {
@@ -24,6 +24,12 @@ function taskReducer(state = taskState, action: TaskActions) {
             return {
                 ...state,
                 tasks: action.payload
+            }
+
+            case ActionTypes.ADD_TASK :
+            return {
+                ...state,
+                tasks: [action.payload, ...state.tasks]
             }
     }
 }

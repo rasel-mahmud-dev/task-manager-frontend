@@ -12,4 +12,9 @@ export type FetchTasksAction = {
     payload: Task[]
 }
 
-export type TaskActions = FetchTasksAction
+export type AddTaskAction = {
+    type: ActionTypes.ADD_TASK
+    payload: Task
+}
+
+export type TaskActions = FetchTasksAction | AddTaskAction
