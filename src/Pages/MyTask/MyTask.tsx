@@ -69,13 +69,68 @@ const MyTask = () => {
                                 <Ring className="hover:!bg-red-500">
                                     <FontAwesomeIcon className="text-xs " icon={faTrash}/>
                                 </Ring>
-                                <Ring>
+                                <Ring onClick={()=>dispatch(toggleFavoriteAction(task._id))}>
                                     <FontAwesomeIcon className="text-xs " icon={faStar}/>
                                 </Ring>
                             </div>
 
                         </div>
                     ))}
+
+
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
+                    <h1>KSDH</h1>
 
                 </div>
             </div>

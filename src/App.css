@@ -1,6 +1,6 @@
 
 .container{
-  max-width: 1200px;
+  max-width: 1000px !important;
   margin: 0 auto;
 }
 
@@ -15,6 +15,11 @@
   @apply shadow-sm bg-white p-4 rounded-lg;
 }
 
+.header-height{
+  height: var(--header-height);
+}
+
+
 @keyframes animate {
   0%{
     transform: translateY(0) rotate(0deg);
@@ -27,6 +32,9 @@
     border-radius: 50%;
   }
 }
+
+
+
 
 .background {
   position: fixed;
