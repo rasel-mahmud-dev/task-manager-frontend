@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import './App.css'
-import MyTask from "./Pages/MyTask/MyTask";
+import {RouterProvider} from "react-router-dom";
+import routes from "./routes/routes";
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <div className="App">
-      <MyTask />
+        <RouterProvider router={routes} />
     </div>
   )
 }

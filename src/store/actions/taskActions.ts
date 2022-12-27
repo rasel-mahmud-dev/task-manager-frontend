@@ -4,7 +4,7 @@ import {ActionTypes, AddTaskAction, FetchTasksAction} from "../actionTypes";
 import {Task} from "../reducers/taskReducer";
 
 
-export const fetchTasksAction = ()=> async(dispatch: Dispatch<FetchTasksAction>)=>{
+export const fetchTasksAction = () => async (dispatch: Dispatch<FetchTasksAction>) => {
     try {
         let {data} = await api().get("/api/v1/tasks")
         dispatch({
@@ -12,22 +12,23 @@ export const fetchTasksAction = ()=> async(dispatch: Dispatch<FetchTasksAction>)
             payload: data
         })
 
-    }catch (ex){}
-
+    } catch (ex) {
+    }
 }
 
 
-
-
-export const addTaskAction = (taskData: Task)=> async(dispatch: Dispatch<AddTaskAction>)=>{
+export const addTaskAction = (taskData: Task, callback: () => void) => async (dispatch: Dispatch<AddTaskAction>) => {
     try {
         let {data, status} = await api().post("/api/v1/tasks/add", taskData)
-        if(status === 201) {
+        if (status === 201) {
             dispatch({
                 type: ActionTypes.ADD_TASK,
                 payload: data.message
             })
+            callback && callback()
         }
-    }catch (ex){}
+    } catch (ex) {
+
+    }
 
 }

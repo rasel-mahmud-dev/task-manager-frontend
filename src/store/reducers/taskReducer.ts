@@ -1,12 +1,18 @@
 import {ActionTypes, TaskActions} from "../actionTypes";
+import store from "../index";
 
 
 export interface Task {
     _id?: string
     title: string,
     image: string,
+    description: string
+    isFavorite: boolean
+    date?: Date
     isCompleted: boolean
     comment?: string
+    createdAt?: Date
+    updatedAt?: Date
 }
 
 interface TaskState {
@@ -26,11 +32,14 @@ function taskReducer(state = taskState, action: TaskActions) {
                 tasks: action.payload
             }
 
-            case ActionTypes.ADD_TASK :
+        case ActionTypes.ADD_TASK :
             return {
                 ...state,
                 tasks: [action.payload, ...state.tasks]
             }
+
+        default:
+            return state;
     }
 }
 
