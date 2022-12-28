@@ -7,6 +7,9 @@ import {RootState} from "../../store";
 import InputGroup from "../../components/InputGroup";
 import Button from "../../components/Button";
 import SocialLogin from "../../components/SocialLogin";
+import { loginAction} from "../../store/actions/authActions";
+
+import Loader from "../../components/Loader";
 
 
 const Login = () => {
@@ -19,10 +22,11 @@ const Login = () => {
     const loginSession = useRef(null);
 
     const [requestLoading, setRequestLoading] = useState(false);
-    const [openPasswordResetModal, setOpenPasswordResetModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
 
-    type DataShape=  {
+
+    type DataShape =  {
         [key: string]: {
             label: string,
             name: string,
@@ -49,52 +53,47 @@ const Login = () => {
             onChange: handleChange
         }
     };
+
     type DataKey = keyof typeof data
 
-
-    const [userInput, setUserInput] = useState<{[key: DataKey]: any}>({
+    const [userInput, setUserInput] = useState<{[Property in  DataKey]: any}>({
         email: "",
         password: ""
     });
 
-    const [errors, setErrors] = useState({});
 
     function handleChange(e: SyntheticEvent) {
         const { name, value } = e.target as HTMLInputElement;
         setUserInput((prev) => ({ ...prev, [name]: value }));
+        setErrorMessage("")
     }
 
     async function handleLogin(e: SyntheticEvent) {
         e.preventDefault();
         setRequestLoading(false);
+        setErrorMessage("")
 
-        let isCompleted = true;
-        // check validation before submit form
-        let errorMessage = "";
-        let tempErrors = { ...errors };
-        for (let key in data) {
 
-        }
-
-        if (!isCompleted) {
-            setErrors(tempErrors);
-
-            return;
+        let key: DataKey
+        for (key in data) {
+            if(!userInput[key]){
+                setErrorMessage(key + " is Required")
+                return;
+            }
         }
 
         setRequestLoading(true);
-        // try {
-        //     let result = await loginAction({
-        //         email: userInput.email.trim(),
-        //         password: userInput.password.trim(),
-        //     });
-        //     loginSession.current = true;
-        // } catch (ex) {
-        //     toast.error(catchErrorMessage(ex));
-        //     setRequestLoading(false);
-        // } finally {
-        //     // setRequestLoading(false);
-        // }
+        try {
+            let result = await loginAction({
+                email: userInput.email.trim(),
+                password: userInput.password.trim(),
+            });
+
+        } catch (ex: any) {
+            setErrorMessage(ex)
+        } finally {
+            setRequestLoading(false);
+        }
     }
 
     // after auth change then should be redirected
@@ -122,6 +121,14 @@ const Login = () => {
                     <form onSubmit={handleLogin}>
                         <h1 className="text-center text-3xl text-dark-900 font-semibold">Login</h1>
 
+                        { requestLoading &&  <Loader className="mt-4" /> }
+
+                        { !requestLoading && errorMessage && (
+                            <div className="bg-red-300/50 text-red-500 p-2 rounded-md my-4">
+                                {errorMessage}
+                            </div>
+                        ) }
+
 
                         {Object.keys(data).map((key: DataKey) => (
                             <InputGroup
@@ -143,12 +150,6 @@ const Login = () => {
                         <div className="text-dark-100 text-sm font-normal mt-5">
                             <h6>
                                 Forgot Password ?
-                                <label
-                                    onClick={() => setOpenPasswordResetModal(true)}
-                                    className="link ml-2 text-blue-500 "
-                                >
-                                    Click to reset
-                                </label>
                             </h6>
                         </div>
 
