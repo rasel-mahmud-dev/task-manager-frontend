@@ -28,3 +28,10 @@
 .section-title{
   @apply font-bold text-3xl text-center text-dark-700 py-6
 }
+
+.avatar-preview-div{
+  width: 200px;
+  height: auto;
+  aspect-ratio: 1/1;
+  object-fit: contain;
+}

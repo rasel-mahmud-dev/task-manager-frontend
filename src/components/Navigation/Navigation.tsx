@@ -135,7 +135,9 @@ const Navigation = () => {
                                     <a className=" flex justify-center items-center gap-x-2">
 
                                         {auth.avatar ? (
-                                            <img src={auth.avatar} alt=""/>
+                                            <div className="w-6 rounded-full h-6 overflow-hidden">
+                                                <img className="w-full" src={auth.avatar} alt=""/>
+                                            </div>
 
                                         ) : (
                                             <FontAwesomeIcon className="" icon={faUser}/>
