@@ -1,8 +1,10 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit"
 
 import taskReducer from "./reducers/taskReducer"
+import authReducer from "./reducers/authReducer";
 
 const reducers = combineReducers({
+    authState: authReducer,
     taskState: taskReducer
 })
 

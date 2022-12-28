@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Link, NavLink, useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import "./navigation.css";
+import "./navigation.scss";
 import Button from "../Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faSignInAlt} from "@fortawesome/free-solid-svg-icons";

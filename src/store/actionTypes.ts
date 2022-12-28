@@ -1,4 +1,5 @@
 import {Task} from "./reducers/taskReducer";
+import {Auth} from "./reducers/authReducer";
 
 export enum ActionTypes{
     ADD_TASK = "ADD_TASK",
@@ -7,6 +8,7 @@ export enum ActionTypes{
     TOGGLE_FAVORITE = "TOGGLE_FAVORITE",
     TOGGLE_COMPLETED = "TOGGLE_COMPLETED",
     DELETE = "DELETE",
+    LOGIN = "LOGIN",
 }
 
 
@@ -36,3 +38,16 @@ export type DeleteAction = {
 }
 
 export type TaskActions = FetchTasksAction | AddTaskAction | ToggleFavoriteAction | ToggleCompleteAction | DeleteAction
+
+
+
+
+
+
+
+export type LoginAction = {
+    type: ActionTypes.LOGIN,
+    payload: Auth
+}
+
+export type AuthActions = LoginAction

@@ -1,7 +1,7 @@
 import React, {FC, HTMLAttributes} from 'react';
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
-
+    type?: "button" | "submit"
 }
 
 const Button: FC<Props> = ({className="", ...other}) => {
