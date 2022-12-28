@@ -17,9 +17,12 @@
 .navbar-transparent{
     background: transparent;
 }
+.navbar-transparent.home a{
+    color: #e1e1e1;
+}
 
 .navbar-transparent a{
-    color: #181818;
+    color: #e1e1e1;
 }
 .logo{
     width: 250px;

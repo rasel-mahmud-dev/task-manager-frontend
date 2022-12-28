@@ -66,7 +66,6 @@ const MyTask = () => {
         return <>
             <h4 className="font-semibold text-xs uppercase mt-10">Completed</h4>
             <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
-                <h4 className="font-semibold text-xs uppercase">Not Starred</h4>
                 {tasks.map((task: Task) => !task.isDeleted && task.isCompleted && (
                     <RenderTask task={task} key={task._id}/>
                 ))}

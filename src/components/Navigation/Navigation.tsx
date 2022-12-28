@@ -16,10 +16,10 @@ const Navigation = () => {
 
     // const windowScroll = usePageScroll();
 
-    const [isHomePage, setHomePage] = useState(true);
+
     const [openAuthMenu, setOpenAuthMenu] = useState(false);
 
-    const [isOpenMobileSearchbar, setOpenMobileSearchbar] = useState(false);
+    const [isNavTransparent, setNavTransparent] = useState(false);
 
     const header = useRef<HTMLDivElement>(null);
     const location = useLocation();
@@ -46,14 +46,19 @@ const Navigation = () => {
     }, []);
 
 
-
-
     function handleScroll() {
-        if(window.scrollY > 40){
-            (header.current as HTMLDivElement).classList.remove("navbar-transparent")
+        if (window.location.pathname === "/") {
+            if (header.current) {
+                if (window.scrollY > 200) {
+                    setNavTransparent(false)
+                } else {
+                    setNavTransparent(true)
+                }
+            }
         } else {
-            (header.current as HTMLDivElement).classList.add("navbar-transparent")
+            setNavTransparent(false)
         }
+
     }
 
     // page scroll event for set navigate bg
@@ -65,9 +70,10 @@ const Navigation = () => {
 
 
     useEffect(() => {
-        setHomePage(window.location.pathname === "/");
         handleResize();
+        handleScroll()
     }, [location.pathname]);
+
 
     function handleLogout() {
         // signOutAction();
@@ -84,18 +90,12 @@ const Navigation = () => {
         setOpenAuthMenu(false);
     }
 
-    function handleOpenMobileSearchbar() {
-        setOpenMobileSearchbar(!isOpenMobileSearchbar);
-    }
-
-
-
 
     return (
         <div>
             <div
                 ref={header}
-                className={`navbar top-0 left-0 fixed shadow-md`}
+                className={`navbar top-0 left-0 fixed shadow-md ${isNavTransparent ? "navbar-transparent" : ""}`}
             >
                 <div className="container flex items-center justify-between">
                     <div className="flex pl-4">
@@ -105,31 +105,20 @@ const Navigation = () => {
                         </Link>
                     </div>
 
-                    <FontAwesomeIcon icon={faBars} className="block bar-icon relative sm:hidden text-2xl mr-4" onClick={toggleNavigation} />
+                    <FontAwesomeIcon icon={faBars} className="block bar-icon relative sm:hidden text-2xl mr-4"
+                                     onClick={toggleNavigation}/>
 
                     <div className={`flex gap-6 items-center main-nav ${expandNavigation ? "expand" : ""}`}>
                         {items.map((item, i) =>
-                            item.private ? (
-                                auth && (
-                                    <NavLink key={i}
-                                             end={true}
-                                             onClick={() => setExpandNavigation(false)}
-                                             to={item.path}
-                                             className="font-medium text-base"
-                                    >
-                                        {item.label}
-                                    </NavLink>
-                                )
-                            ) : (
-                                <NavLink key={i}
-                                         end={true}
-                                         onClick={() => setExpandNavigation(false)}
-                                         to={item.path}
-                                         className="font-medium text-base"
-                                >
-                                    {item.label}
-                                </NavLink>
-                            )
+
+                            <NavLink key={i}
+                                     end={true}
+                                     onClick={() => setExpandNavigation(false)}
+                                     to={item.path}
+                                     className="font-medium text-base"
+                            >
+                                {item.label}
+                            </NavLink>
                         )}
 
                         <NavLink to="/login">

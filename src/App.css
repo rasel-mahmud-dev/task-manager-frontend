@@ -19,3 +19,12 @@
 .header-height{
   height: var(--header-height);
 }
+
+.hero-section img{
+  /*opacity: 0.9;*/
+  filter: brightness(0.5);
+}
+
+.section-title{
+  @apply font-bold text-3xl text-center text-dark-700 py-6
+}
