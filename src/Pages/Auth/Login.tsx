@@ -1,13 +1,13 @@
 import React, {SyntheticEvent, useEffect, useRef, useState} from "react";
 
 
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store";
 import InputGroup from "../../components/InputGroup";
 import Button from "../../components/Button";
 import SocialLogin from "../../components/SocialLogin";
-import { loginAction} from "../../store/actions/authActions";
+import {loginAction} from "../../store/actions/authActions";
 
 import Loader from "../../components/Loader";
 import Divider from "../../components/Divider";
@@ -15,7 +15,7 @@ import Divider from "../../components/Divider";
 
 const Login = () => {
 
-    const { auth } = useSelector((state: RootState)=> state.authState )
+    const {auth} = useSelector((state: RootState) => state.authState)
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -28,14 +28,13 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
 
 
-
-    type DataShape =  {
+    type DataShape = {
         [key: string]: {
             label: string,
             name: string,
             type: string,
             placeholder: string,
-            onChange: (e: SyntheticEvent)=>void
+            onChange: (e: SyntheticEvent) => void
         }
     }
 
@@ -59,15 +58,15 @@ const Login = () => {
 
     type DataKey = keyof typeof data
 
-    const [userInput, setUserInput] = useState<{[Property in  DataKey]: any}>({
+    const [userInput, setUserInput] = useState<{ [Property in DataKey]: any }>({
         email: "",
         password: ""
     });
 
 
     function handleChange(e: SyntheticEvent) {
-        const { name, value } = e.target as HTMLInputElement;
-        setUserInput((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target as HTMLInputElement;
+        setUserInput((prev) => ({...prev, [name]: value}));
         setErrorMessage("")
     }
 
@@ -79,7 +78,7 @@ const Login = () => {
 
         let key: DataKey
         for (key in data) {
-            if(!userInput[key].trim()){
+            if (!userInput[key].trim()) {
                 setErrorMessage(key + " is Required")
                 return;
             }
@@ -87,22 +86,22 @@ const Login = () => {
 
         setRequestLoading(true);
 
-            dispatch(loginAction({
-                email: userInput.email.trim(),
-                password: userInput.password.trim(),
-            }, (error)=>{
-                if(error){
-                    setErrorMessage(error)
-                    setRequestLoading(false)
-                } else{
-                    // redirect
-                    let redirectPath = location.state || "/";
-                    navigate(redirectPath)
-                }
-
+        dispatch(loginAction({
+            email: userInput.email.trim(),
+            password: userInput.password.trim(),
+        }, (error) => {
+            if (error) {
+                setErrorMessage(error)
                 setRequestLoading(false)
+            } else {
+                // redirect
+                let redirectPath = location.state || "/";
+                navigate(redirectPath)
+            }
 
-            }))
+            setRequestLoading(false)
+
+        }))
 
     }
 
@@ -132,28 +131,23 @@ const Login = () => {
                     <form onSubmit={handleLogin}>
                         <h1 className="text-center text-2xl py-4 text-dark-900 font-bold">Login</h1>
 
-                        { requestLoading &&  <Loader className="mt-4" /> }
+                        {requestLoading && <Loader className="mt-4"/>}
 
-                        { !requestLoading && errorMessage && (
+                        {!requestLoading && errorMessage && (
                             <div className="bg-red-300/50 text-red-500 p-2 rounded-md my-4">
                                 {errorMessage}
                             </div>
-                        ) }
+                        )}
 
 
                         {Object.keys(data).map((key: DataKey) => (
-                            <InputGroup
-                                label={data[key].label}
-                                name={data[key].name}
-                                value={userInput[key]}
-                                onChange={handleChange}
-                            />
+                            <InputGroup {...data[key]} value={userInput[key]}/>
                         ))}
 
 
                         <div className="form-control mt-4">
                             <label className="flex gap-x-1 items-center cursor-pointer">
-                                <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
+                                <input type="checkbox" className="checkbox checkbox-sm checkbox-primary"/>
                                 <span className="label-text">Remember me</span>
                             </label>
                         </div>
@@ -165,10 +159,10 @@ const Login = () => {
                         </div>
 
                         <Button className="mt-4 w-full">Login</Button>
-                        <Divider barClass="!h-0.5" text="OR" />
+                        <Divider barClass="!h-0.5" text="OR"/>
 
                         {/**** social login button */}
-                        <SocialLogin />
+                        <SocialLogin/>
 
 
                         <p className="text-center text-sm  mb-4 mt-6 text-dark-300">

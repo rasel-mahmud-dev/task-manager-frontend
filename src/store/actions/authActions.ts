@@ -13,8 +13,8 @@ import {Auth} from "../reducers/authReducer";
 
 
 // user login action
-export function loginAction(userData: { email: string, password: string }, cb: (error?: string)=>void) {
-    return async function(dispatch: Dispatch<LoginAction>){
+export function loginAction(userData: { email: string, password: string }, cb: (error?: string) => void) {
+    return async function (dispatch: Dispatch<LoginAction>) {
         try {
             localStorage.removeItem("token")
             let {status, data} = await api().post("/api/v1/auth/login", userData);
@@ -60,36 +60,29 @@ export function googleSignInAction() {
 export function registrationAction(userData: { username: string, avatar: string, email: string, password: string }, cb: (err?: string) => void) {
     return async function (dispatch: Dispatch<LoginAction>) {
 
-        const {username, avatar, email, password} = userData;
 
         try {
             // first remove token from localstorage
             localStorage.removeItem("token")
 
-            let [currentUser, error] = await generateAccessTokenAction({
-                username,
-                avatar,
-                email,
-                password
-            });
 
-            if (!error && currentUser) {
+            let {status, data} = await api().post("/api/v1/auth/registration", userData);
+            if (status === 201 && data.token) {
+                localStorage.setItem("token", data.token)
                 dispatch({
                     type: ActionTypes.LOGIN,
-                    payload: currentUser
+                    payload: data.user
                 })
                 cb && cb()
                 return
+            } else {
+                cb && cb(data.message)
             }
-
-            cb && cb(error)
-
         } catch (ex: any) {
+            console.log(ex)
             cb && cb(ex.message)
         }
     }
-
-
 }
 
 

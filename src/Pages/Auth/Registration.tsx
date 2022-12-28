@@ -121,15 +121,15 @@ const Registration = () => {
 
             setRequestLoading(true);
 
-            const [result, error] = await fileUpload(userInput.avatar as Blob)
-            if(!result || error){
-                setErrorMessage("Image upload fail, Please try again")
-                return;
-            }
+            // const [result, error] = await fileUpload(userInput.avatar as Blob)
+            // if(!result || error){
+            //     setErrorMessage("Image upload fail, Please try again")
+            //     return;
+            // }
             dispatch(
                 registrationAction({
                     email: userInput.email.trim(),
-                    avatar: result.url,
+                    avatar: "result.url",
                     password: userInput.password.trim(),
                     username: userInput.username.trim()
                 }, function (err) {
@@ -190,18 +190,11 @@ const Registration = () => {
 
 
                         {Object.keys(data).map((key: DataKey) => key !== "avatar" ? (
-                            <InputGroup
-                                label={data[key].label}
-                                name={data[key].name}
-                                value={userInput[key]}
-                                onChange={handleChange}
-                            />
+                            <InputGroup {...data[key]} value={userInput[key]} />
                         ) : (
                             <ImageChooser
+                                {...data[key]}
                                 className={"!flex-col"}
-                                label={data[key].label}
-                                name={data[key].name}
-                                onChange={handleChange}
                                 previewImageClass="avatar-preview-div"
                             />
                         ))}
