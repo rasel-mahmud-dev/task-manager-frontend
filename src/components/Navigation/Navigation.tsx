@@ -3,12 +3,14 @@ import {Link, NavLink, useLocation, useNavigate, useSearchParams} from "react-ro
 import "./navigation.scss";
 import Button from "../Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBars, faSignInAlt} from "@fortawesome/free-solid-svg-icons";
+import {faBars, faSignInAlt, faUser} from "@fortawesome/free-solid-svg-icons";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store";
 
 
 const Navigation = () => {
 
-    const auth = {}
+    const {auth} = useSelector((state: RootState) => state.authState)
 
 
     const navigate = useNavigate();
@@ -121,68 +123,61 @@ const Navigation = () => {
                             </NavLink>
                         )}
 
-                        <NavLink to="/login">
-                            <FontAwesomeIcon icon={faSignInAlt}/>
-                            Login
-                        </NavLink>
-
 
                         <div className="flex-none">
-                            {auth && (
+                            {auth ? (
                                 <div
                                     className="relative "
                                     onMouseOver={() => setOpenAuthMenu(true)}
                                     onMouseLeave={closeAuthDropdown}
                                     onClick={() => setOpenAuthMenu(!openAuthMenu)}
                                 >
-                                    <div className=" flex justify-center items-center pl-3">
+                                    <a className=" flex justify-center items-center gap-x-2">
 
+                                        {auth.avatar ? (
+                                            <img src={auth.avatar} alt=""/>
+
+                                        ) : (
+                                            <FontAwesomeIcon className="" icon={faUser}/>
+                                        )}
+
+
+                                        <h4>{auth.username}</h4>
+                                    </a>
+
+                                    <div className={`absolute w-52 card bg-white top-14 left-0 ${openAuthMenu ? "block": "hidden"}`}>
+                                        <a className="pt-1 flex items-center border-b-2 border-primary-200/20 pb-2">
+
+                                            <div className="flex flex-col ml-3">
+                                                <span className="text-sm font-semibold text-dark-400">{auth.username}</span>
+                                            </div>
+                                        </a>
+                                        <div className="mt-2">
+                                            <li className="pt-1 flex items-center gap-x-1 hover:text-primary-500">
+                                                {/*<MdSpaceDashboard className="text-xl text-dark-400" />*/}
+                                                <Link onClick={closeAuthDropdown} to={`/dashboard`}>
+                                                    Dashboard
+                                                </Link>
+                                            </li>
+                                            <li
+                                                className="pt-1 flex items-center gap-x-1 cursor-pointer hover:text-primary-500"
+                                                onClick={handleLogout}
+                                            >
+
+                                                Logout
+                                            </li>
+                                        </div>
                                     </div>
-
-                                    {/*<Dropdown isOpen={openAuthMenu}>*/}
-                                    {/*    <a className="pt-1 flex items-center border-b-2 border-primary-200/20 pb-2">*/}
-
-                                    {/*        <div className="flex flex-col ml-3">*/}
-                                    {/*            <span className="text-sm font-semibold text-dark-400">{auth.username}</span>*/}
-                                    {/*            <span className="text-light-100 text-xs font-medium">{auth.role}</span>*/}
-                                    {/*        </div>*/}
-                                    {/*    </a>*/}
-                                    {/*    <div className="mt-2">*/}
-                                    {/*        <li className="pt-1 flex items-center gap-x-1 hover:text-primary-500">*/}
-                                    {/*            /!*<MdSpaceDashboard className="text-xl text-dark-400" />*!/*/}
-                                    {/*            <Link onClick={closeAuthDropdown} to={`/dashboard`}>*/}
-                                    {/*                Dashboard*/}
-                                    {/*            </Link>*/}
-                                    {/*        </li>*/}
-                                    {/*        <li*/}
-                                    {/*            className="pt-1 flex items-center gap-x-1 cursor-pointer hover:text-primary-500"*/}
-                                    {/*            onClick={handleLogout}*/}
-                                    {/*        >*/}
-
-                                    {/*            Logout*/}
-                                    {/*        </li>*/}
-                                    {/*    </div>*/}
-                                    {/*</Dropdown>*/}
                                 </div>
+                            ) : (
+                                <NavLink to="/login">
+                                    <FontAwesomeIcon icon={faSignInAlt}/>
+                                    Login
+                                </NavLink>
                             )}
                         </div>
 
-                        <div className="flex items-center">
-                            {!auth && (
-                                <div>
-                                    <Button className="ml-4 login-btn">
-                                        <Link to="/login" state={location.pathname} className="flex items-center">
-                                            {/*<FaSignInAlt />*/}
-                                            <span className="ml-1">Login</span>
-                                        </Link>
-                                    </Button>
-                                    <Link to="/login" state={location.pathname} className="px-1 ml-2 login-icon block">
-                                        {/*<FaSignInAlt className="text-xl" />*/}
-                                    </Link>
-                                </div>
-                            )}
 
-                        </div>
                     </div>
                 </div>
             </div>

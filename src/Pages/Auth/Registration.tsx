@@ -7,13 +7,13 @@ import {AppDispatch, RootState} from "../../store";
 import InputGroup from "../../components/InputGroup";
 import Button from "../../components/Button";
 import SocialLogin from "../../components/SocialLogin";
-import { loginAction} from "../../store/actions/authActions";
+import {loginAction, registrationAction} from "../../store/actions/authActions";
 
 import Loader from "../../components/Loader";
 import Divider from "../../components/Divider";
 
 
-const Login = () => {
+const Registration = () => {
 
     const { auth } = useSelector((state: RootState)=> state.authState )
 
@@ -33,13 +33,21 @@ const Login = () => {
         [key: string]: {
             label: string,
             name: string,
-            type: string,
+            type?: string,
             placeholder: string,
             onChange: (e: SyntheticEvent)=>void
         }
     }
 
     const data: DataShape = {
+
+        username: {
+            label: "Username",
+            name: "username",
+            placeholder: "Enter username",
+            onChange: handleChange
+        },
+
         email: {
             label: "Email",
             name: "email",
@@ -60,6 +68,7 @@ const Login = () => {
     type DataKey = keyof typeof data
 
     const [userInput, setUserInput] = useState<{[Property in  DataKey]: any}>({
+        username: "",
         email: "",
         password: ""
     });
@@ -71,7 +80,7 @@ const Login = () => {
         setErrorMessage("")
     }
 
-    async function handleLogin(e: SyntheticEvent) {
+    async function handleRegistration(e: SyntheticEvent) {
         e.preventDefault();
         setRequestLoading(false);
         setErrorMessage("")
@@ -87,40 +96,50 @@ const Login = () => {
 
         setRequestLoading(true);
 
-            dispatch(loginAction({
-                email: userInput.email.trim(),
-                password: userInput.password.trim(),
-            }, (error)=>{
-                if(error){
-                    setErrorMessage(error)
-                    setRequestLoading(false)
-                } else{
+        try {
+            dispatch(
+                registrationAction({
+                    email: userInput.email.trim(),
+                    avatar: "",
+                    password: userInput.password.trim(),
+                    username: userInput.username.trim()
+                }, function (err){
+                    if(err){
+                        setErrorMessage(err)
+                        setRequestLoading(false)
+                        return;
+                    }
+
                     // redirect
                     let redirectPath = location.state || "/";
                     navigate(redirectPath)
-                }
 
-                setRequestLoading(false)
+                }))
 
-            }))
 
+        } catch (ex: any) {
+            setErrorMessage(ex)
+
+        } finally {
+            setRequestLoading(false);
+        }
     }
 
 
-    // // after auth change then should be redirected
-    // useEffect(() => {
-    //     if (auth) {
-    //         let redirectPath = location.state || "/";
-    //         if (loginSession.current) {
-    //             setRequestLoading(false);
-    //             navigate(redirectPath);
-    //
-    //         } else {
-    //             // console.log("redirect home")
-    //             navigate("/");
-    //         }
-    //     }
-    // }, [auth, loginSession.current]);
+    // after auth change then should be redirected
+    useEffect(() => {
+        // if (auth) {
+        //     let redirectPath = location.state || "/";
+        //     if (loginSession.current) {
+        //         setRequestLoading(false);
+        //         navigate(redirectPath);
+        //         loginSession.current = false;
+        //     } else {
+        //         // console.log("redirect home")
+        //         navigate("/");
+        //     }
+        // }
+    }, [auth, loginSession.current]);
 
 
     return (
@@ -129,8 +148,8 @@ const Login = () => {
 
             <div className="mt-12">
                 <div className="max-w-md mx-auto shadow-xxs rounded p-4 bg-white m-3 mt-4 rounded-xl">
-                    <form onSubmit={handleLogin}>
-                        <h1 className="text-center text-2xl py-4 text-dark-900 font-bold">Login</h1>
+                    <form onSubmit={handleRegistration}>
+                        <h1 className="text-center text-2xl py-4 text-dark-900 font-bold">Registration Form</h1>
 
                         { requestLoading &&  <Loader className="mt-4" /> }
 
@@ -151,34 +170,28 @@ const Login = () => {
                         ))}
 
 
-                        <div className="form-control mt-4">
-                            <label className="flex gap-x-1 items-center cursor-pointer">
-                                <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-                                <span className="label-text">Remember me</span>
-                            </label>
-                        </div>
-
                         <div className="text-dark-100 text-sm font-normal mt-5">
                             <h6>
                                 Forgot Password ?
                             </h6>
                         </div>
 
-                        <Button className="mt-4 w-full">Login</Button>
+                        <Button className="mt-4 w-full">Registration</Button>
+
                         <Divider barClass="!h-0.5" text="OR" />
 
                         {/**** social login button */}
                         <SocialLogin />
 
 
-                        <p className="text-center text-sm  mb-4 mt-6 text-dark-300">
-                            Not a member
+                        <p className="text-center  text-sm mb-4 mt-6 text-dark-300">
+                            Already have an account
                             <Link
-                                to="/registration"
+                                to="/login"
                                 state={location.state}
                                 className="font-medium !text-primary-500 text-link ml-2 "
                             >
-                                Sign up now
+                                Login now
                             </Link>
                         </p>
                     </form>
@@ -188,4 +201,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Registration;

@@ -1,43 +1,38 @@
 import {
     signInWithPopup,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
     GoogleAuthProvider,
-    updateProfile,
-    sendPasswordResetEmail,
-    signOut,
     getAuth
 } from "firebase/auth";
-import {firebaseApp} from "../../firebase";
 
+
+import {firebaseApp} from "../../firebase";
+import api from "../../api";
+import {Dispatch} from "redux";
+import {ActionTypes, LoginAction} from "../actionTypes";
+import {Auth} from "../reducers/authReducer";
 
 
 // user login action
-export function loginAction(userData: { email: string, password: string }) {
-    return new Promise(async (resolve, reject) => {
-
-        let auth1 = getAuth()
-
+export function loginAction(userData: { email: string, password: string }, cb: (error?: string)=>void) {
+    return async function(dispatch: Dispatch<LoginAction>){
         try {
             localStorage.removeItem("token")
-            let userCredential = await signInWithEmailAndPassword(auth1, userData.email, userData.password);
-            if (userCredential.user) {
-                resolve(true);
+            let {status, data} = await api().post("/api/v1/auth/login", userData);
+            if (status === 201 && data.token) {
+                localStorage.setItem("token", data.token)
+                dispatch({
+                    type: ActionTypes.LOGIN,
+                    payload: data.user
+                })
+                cb()
             } else {
-                reject("Please try again");
+                cb(data.message)
             }
-        } catch (ex: unknown) {
-            let message = ""
-            if(ex.message) {
-                if (ex.message.includes("user-not-found")) {
-                    message = "User not Registered yet"
-                }
-            } else {
-                message  = "Internal Error, Please try again"
-            }
-            reject(message)
+
+        } catch (ex: any) {
+            cb(ex.message)
         }
-    });
+    }
 }
 
 
@@ -50,7 +45,7 @@ export function googleSignInAction() {
             const user = result.user;
             if (user) {
                 resolve(user);
-            }else{
+            } else {
                 reject("Google login fail")
             }
 
@@ -59,3 +54,73 @@ export function googleSignInAction() {
         }
     });
 }
+
+
+// user registration process
+export function registrationAction(userData: { username: string, avatar: string, email: string, password: string }, cb: (err?: string) => void) {
+    return async function (dispatch: Dispatch<LoginAction>) {
+
+        const {username, avatar, email, password} = userData;
+
+        try {
+            // first remove token from localstorage
+            localStorage.removeItem("token")
+
+            let [currentUser, error] = await generateAccessTokenAction({
+                username,
+                avatar,
+                email,
+                password
+            });
+
+            if (!error && currentUser) {
+                dispatch({
+                    type: ActionTypes.LOGIN,
+                    payload: currentUser
+                })
+                cb && cb()
+                return
+            }
+
+            cb && cb(error)
+
+        } catch (ex: any) {
+            cb && cb(ex.message)
+        }
+    }
+
+
+}
+
+
+export function validateToken() {
+    return new Promise(async (resolve) => {
+        try {
+            let {status, data} = await api().get("/api/v1/auth/validate-token");
+            if (status === 200) {
+                resolve([data.user, undefined]);
+            } else {
+                resolve([undefined, data.message]);
+            }
+        } catch (ex: any) {
+            resolve([undefined, ex.message]);
+        }
+    });
+}
+
+export function generateAccessTokenAction(payload: { username: string, avatar: string, email: string, password: string, isEntry?: boolean }) {
+    return new Promise<[Auth | undefined, string | undefined]>(async (resolve, reject) => {
+        try {
+            let {status, data} = await api().post("/api/v1/auth/generate-token", payload);
+            if (status === 201 && data.token) {
+                localStorage.setItem("token", data.token)
+                resolve([data.user, undefined]);
+            } else {
+                resolve([undefined, data.message]);
+            }
+        } catch (ex: any) {
+            resolve([undefined, ex.message]);
+        }
+    });
+}
+
