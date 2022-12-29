@@ -6,6 +6,7 @@ import HomePage from "../pages/HomePage/HomePage";
 import Login from "../pages/Auth/Login";
 import Registration from "../pages/Auth/Registration";
 import Media from "../pages/Media/Media";
+import Detail from "../pages/Detail/Detail";
 
 
 const routes = createBrowserRouter([
@@ -15,6 +16,7 @@ const routes = createBrowserRouter([
         children: [
             {path: "/", element: <HomePage/>},
             {path: "/my-tasks", element: <MyTask/>},
+            {path: "/tasks/:taskId", element: <Detail/>},
             {path: "/media", element: <Media/>},
             {path: "/add-task", element: <AddTask/>},
             {path: "/edit-task/:taskId", element: <AddTask/>},

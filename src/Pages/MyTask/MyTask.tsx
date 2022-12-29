@@ -54,14 +54,14 @@ const MyTask = () => {
         return (
             <>
                 <div className="card mx-auto bg-opacity-50 backdrop-blur">
-                    <h4 className="font-semibold text-xs uppercase">Starred</h4>
+                    <h4 className="font-semibold text-xs uppercase text-dark-900 dark:text-dark-10">Starred</h4>
                     {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && task.isFavorite) && (
                         <RenderTask updateEnabled={true} task={task} key={task._id}/>
                     ))}
                 </div>
 
                 <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
-                    <h4 className="font-semibold text-xs uppercase">Not Starred</h4>
+                    <h4 className="font-semibold text-xs uppercase text-dark-900 dark:text-dark-10">Not Starred</h4>
                     {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && !task.isFavorite) && (
                         <RenderTask updateEnabled={true} task={task} key={task._id}/>
                     ))}
@@ -72,7 +72,7 @@ const MyTask = () => {
 
     function renderCompleted() {
         return <>
-            <h4 className="font-semibold text-xs uppercase mt-10">Completed</h4>
+            <h4 className="font-semibold text-xs uppercase mt-10  text-dark-900 dark:text-dark-10 ">Completed</h4>
             <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
                 {tasks.map((task: Task) => !task.isDeleted && task.isCompleted && (
                     <RenderTask task={task} key={task._id}/>
@@ -83,7 +83,7 @@ const MyTask = () => {
 
     function renderDeleted() {
         return <>
-            <h4 className="font-semibold text-xs uppercase mt-10">Recent Deleted Task</h4>
+            <h4 className="font-semibold text-xs uppercase mt-10  text-dark-900 dark:text-dark-10">Recent Deleted Task</h4>
             <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
                 {tasks.map((task: Task) => task.isDeleted && (
                     <RenderTask className="opacity-40" task={task} key={task._id}/>
@@ -112,12 +112,12 @@ const MyTask = () => {
     function renderSortPanel() {
         return (
             <div className="mt-2 mb-4">
-                <div className="flex justify-between items-center text-sm font-medium">
+                <div className="flex justify-between items-center text-sm font-medium  text-dark-300 dark:text-dark-200">
                     <div className="flex items-center gap-x-2">
                         <FontAwesomeIcon className="text-sm" icon={faSort}/>
                         <h4 className="text-sm font-medium">Sort By</h4>
                         <select onChange={changeSortByField} value={sort.field}
-                                className="outline-none border border-blue-600/60 rounded bg-transparent text-dark-300 text-sm py-1 px-1.5 ">
+                                className="outline-none border border-blue-600/60 rounded bg-transparent text-dark-300 dark:text-dark-200  text-sm py-1 px-1.5 ">
                             <option value="title">Title</option>
                             <option value="createdAt">Added</option>
                         </select>
@@ -145,7 +145,7 @@ const MyTask = () => {
             <div className="max-w-3xl mx-auto">
 
                 <div className="pt-6 pb-3 flex justify-between items-center">
-                    <h1 className="font-semibold text-lg ">My Tasks</h1>
+                    <h1 className="card-title">My Tasks</h1>
                     <Link to="/add-task">
                         <Button className="flex items-center gap-x-1 text-sm px-3">
                             <FontAwesomeIcon icon={faPlus}/>
@@ -158,10 +158,10 @@ const MyTask = () => {
                     <div className="flex items-center gap-x-4">
                         {tabs.map((tab, index) => (
                             <li key={tab.label} onClick={() => setCurrentTab(index)}
-                                className={` text-sm font-semibold list-none cursor-pointer ${currentTab === index ? "text-blue-600 font-medium" : ""}`}>{tab.label}</li>
+                                className={`text-dark-300 dark:text-dark-200 text-sm font-semibold list-none cursor-pointer ${currentTab === index ? "!text-blue-600 font-medium" : ""}`}>{tab.label}</li>
                         ))}
                     </div>
-                    <li className={`list-none cursor-pointer text-sm font-semibold `}>
+                    <li className={`list-none cursor-pointer text-sm font-semibold  text-dark-300 dark:text-dark-200 `}>
                         <Link to="/add-task">
                             <FontAwesomeIcon className="text-xs mr-1" icon={faPlus}/>
                             Add

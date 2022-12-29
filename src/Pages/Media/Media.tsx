@@ -29,7 +29,7 @@ const Media = () => {
                 <div className="max-w-3xl mx-auto">
 
                     <div className="pt-6 pb-3 flex justify-between items-center">
-                        <h1 className="font-semibold text-lg ">Media</h1>
+                        <h1 className="card-title">Media</h1>
                         <Link to="/add-task">
                             <Button className="flex items-center gap-x-1 text-sm px-3">
                                 <FontAwesomeIcon icon={faPlus}/>
@@ -45,7 +45,7 @@ const Media = () => {
                                 <div className="w-40 mx-auto text-sm">
                                     <img className="w-full" src={task?.image} alt="task-image"/>
                                 </div>
-                                <h4 className="text-sm text-center font-normal py-4 break-all">{task.title}</h4>
+                                <h4 className="text-sm text-dark-300 dark:text-dark-50 text-center font-normal py-4 break-all">{task.title}</h4>
                             </div>
                         ))}
                     </div>

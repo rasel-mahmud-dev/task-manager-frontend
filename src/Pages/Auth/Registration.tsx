@@ -165,9 +165,9 @@ const Registration = () => {
 
 
             <div className="mt-12">
-                <div className="max-w-md mx-auto shadow-xxs rounded p-4 bg-white m-3 mt-4 rounded-xl">
+                <div className="max-w-md mx-auto shadow-xxs rounded p-4 card m-3 mt-4 rounded-xl">
                     <form onSubmit={handleRegistration}>
-                        <h1 className="text-center text-2xl py-4 text-dark-900 font-bold">Registration Form</h1>
+                        <h1 className="card-title">Registration Form</h1>
 
                         {requestLoading && <Loader className="mt-4"/>}
                         {!requestLoading && <ErrorMessage message={errorMessage}  />}
@@ -197,7 +197,7 @@ const Registration = () => {
                         <SocialLogin onError={handleGoogleLoginError}/>
 
 
-                        <p className="text-center  text-sm mb-4 mt-6 text-dark-300">
+                        <p className="text-center  text-sm mb-4 mt-6 text-dark-300 dark:text-dark-200">
                             Already have an account
                             <Link
                                 to="/login"

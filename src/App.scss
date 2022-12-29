@@ -15,7 +15,11 @@
 
 
 .card{
-  @apply shadow-sm bg-white p-4 rounded-lg;
+  @apply shadow-sm bg-white p-4 rounded-lg dark:bg-dark-800 dark:shadow-card-1;
+}
+
+.card-title{
+  @apply text-center text-2xl py-4 text-dark-900 dark:text-dark-20 font-bold;
 }
 
 .header-height{
@@ -30,6 +34,10 @@
 .section-title{
   @apply font-bold text-3xl text-center text-dark-700 py-6
 }
+.section{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
 
 .avatar-preview-div{
   width: 200px !important;
@@ -37,12 +45,17 @@
   aspect-ratio: 1/1;
   object-fit: contain;
 }
+.hero-image{
+  @include getDown(600px){
+    height: 300px;
+    object-fit: cover;
+  }
+}
 
 .masonry-gallery{
   column-count: 4;
   .card{
     margin: 15px 0;
-    background-color: hsla(0,0%,100%,.5);
     overflow: hidden;
   }
 

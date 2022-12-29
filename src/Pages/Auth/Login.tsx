@@ -115,9 +115,9 @@ const Login = () => {
 
 
             <div className="mt-12">
-                <div className="max-w-md mx-auto shadow-xxs rounded p-4 bg-white m-3 mt-4 rounded-xl">
+                <div className="max-w-md mx-auto shadow-xxs rounded p-4 card m-3 mt-4 rounded-xl">
                     <form onSubmit={handleLogin}>
-                        <h1 className="text-center text-2xl py-4 text-dark-900 font-bold">Login</h1>
+                        <h1 className="card-title">Login</h1>
 
                         {requestLoading && <Loader className="mt-4"/>}
 
@@ -143,7 +143,7 @@ const Login = () => {
                         <SocialLogin onError={handleGoogleLoginError}/>
 
 
-                        <p className="text-center text-sm  mb-4 mt-6 text-dark-300">
+                        <p className="text-center text-sm  mb-4 mt-6 text-dark-300 dark:text-dark-200">
                             Not a member
                             <Link
                                 to="/registration"

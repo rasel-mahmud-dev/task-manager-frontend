@@ -1,19 +1,20 @@
 @import "../../sass/--mixin";
 
 .navbar {
-  @apply z-50 w-full;
-  background-color: #ecefff;
+
+  @apply dark:bg-dark-900 bg-[#ecefff] z-50 w-full;
+  a {
+    @apply dark:text-dark-20 text-dark-800;
+    padding: 20px 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
 }
 
 .main-nav {
   transition: all .3s ease;
   transform-origin: top;
-  a {
-    color: #1e1e1e;
-    padding: 20px 0;
-    font-size: 14px;
-    font-weight: 500;
-  }
+
 }
 
 .navbar-transparent {
@@ -21,16 +22,16 @@
 
   &.home {
     a {
-      color: #e1e1e1;
+      @apply text-dark-20;
     }
   }
 
   a {
-    color: #e1e1e1;
+    @apply text-dark-20;
   }
 
   .main-nav.expand a {
-    color: #efefef;
+    @apply dark:text-dark-20 text-dark-800;
   }
 
   .main-nav.expand {
@@ -64,6 +65,10 @@
       opacity: 1;
       z-index: 200 !important;
       background: white;
+      @apply dark:bg-dark-800;
+      a{
+        @apply dark:text-dark-20 text-dark-800;
+      }
     }
 
     .main-nav.expand a {

@@ -39,19 +39,20 @@ const AddTask = () => {
     const [requestLoading, setRequestLoading] = useState(false);
 
 
-    useEffect(()=>{
-        if(!taskId) return;
+    useEffect(() => {
+        if (!taskId) return;
 
-        (async function(){
-            let [taskDetails, error]  = await fetchTask<Task>(taskId)
-            if(taskDetails &&  !error){
+        (async function () {
+            let [taskDetails, error] = await fetchTask<Task>(taskId)
+            if (taskDetails && !error) {
                 setNewTaskData(taskDetails)
             }
         }())
     }, [taskId])
 
 
-    type Key  = keyof Task
+    type Key = keyof Task
+
     function handleChange(e: SyntheticEvent) {
         setErrorMessage("")
         let target = e.target as HTMLInputElement
@@ -70,34 +71,42 @@ const AddTask = () => {
         let errorMessage = ""
         requitedFields.forEach(field => {
             if (!newTaskData[field]) {
-                if(!errorMessage) {
+                if (!errorMessage) {
                     errorMessage = field + " Required"
                 }
             }
         })
 
-        if(errorMessage) return setErrorMessage(errorMessage)
+        if (errorMessage) return setErrorMessage(errorMessage)
 
-        let image = newTaskData.image as unknown as Blob
-        if(image && image.size > (200 * 1024)){
-            setErrorMessage("Image size should be under 200kb")
-            return;
+        let imageUrl = ""
+
+        if (typeof newTaskData.image === "string") {
+            imageUrl = newTaskData.image
+
+
+        } else {
+            let image = newTaskData.image as unknown as Blob
+            if (image && image.size > (200 * 1024)) {
+                setErrorMessage("Image size should be under 200kb")
+                return;
+            }
+            setRequestLoading(true);
+
+            const [result, error] = await fileUpload(image)
+            if (error) {
+                setErrorMessage("Image upload fail, Please try again")
+                setRequestLoading(false);
+                return;
+            }
+            imageUrl = result?.url || ""
         }
 
-        setRequestLoading(true);
-
-        const [result, error] = await fileUpload(image)
-        if(error){
-            setErrorMessage("Image upload fail, Please try again")
-            setRequestLoading(false);
-            return;
-        }
-
-        if(taskId){
-        // update task
+        if (taskId) {
+            // update task
             dispatch(updateTaskAction({
                 ...newTaskData,
-                image: result?.url || ""
+                image: imageUrl
             }, () => {
                 navigate("/my-tasks")
             }))
@@ -106,7 +115,7 @@ const AddTask = () => {
             // add new task
             dispatch(addTaskAction({
                 ...newTaskData,
-                image: result?.url || ""
+                image: imageUrl
             }, () => {
                 navigate("/my-tasks")
             }))
@@ -116,10 +125,10 @@ const AddTask = () => {
     return (
         <div className="container py-10">
             <div className="max-w-md mx-auto card">
-                <h1 className="text-3xl font-bold text-center">{taskId ? "Update Task" : "Add Task"}</h1>
+                <h1 className="card-title">{taskId ? "Update Task" : "Add Task"}</h1>
 
                 {requestLoading && <Loader className="mt-4"/>}
-                {!requestLoading && <ErrorMessage message={errorMessage}  />}
+                {!requestLoading && <ErrorMessage message={errorMessage}/>}
 
                 <form onSubmit={handleAddTask}>
                     <InputGroup
@@ -146,7 +155,7 @@ const AddTask = () => {
                         previewImageClass="avatar-preview-div"
                     />
 
-                    <Button className="block mx-auto w-full mt-4">{taskId ? "Update Task" : "Add Task" }</Button>
+                    <Button className="block mx-auto w-full mt-4">{taskId ? "Update Task" : "Add Task"}</Button>
                 </form>
 
 

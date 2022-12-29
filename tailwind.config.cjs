@@ -4,9 +4,12 @@ module.exports = {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
+        "body-dark": "#232323",
+        "body-light": "#2C65EC0C",
         dark: {
           0: "#ffffff",
           10: "#ececec",
@@ -22,6 +25,10 @@ module.exports = {
           800: "#181818",
           900: "#090909"
         }
+      },
+      boxShadow: {
+        "card-1": "-1px 4px 20px 0px #00000047",
+        "card-2": "-1px 4px 20px 0px #00000047"
       }
     },
   },

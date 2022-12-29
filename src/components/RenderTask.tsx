@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCircle, faCircleCheck, faPenToSquare} from "@fortawesome/free-regular-svg-icons";
+import {faCircle, faCircleCheck, faEye, faPenToSquare} from "@fortawesome/free-regular-svg-icons";
 import Ring from "./Ring";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
@@ -47,17 +47,25 @@ const RenderTask: FC<RenderTaskProps> = ({task, updateEnabled = false, className
                             <FontAwesomeIcon icon={faCircle} onClick={() => handleToggleComplete(task)}/>
                         )}
                     </span>
-                {task.title}
+                <span className="text-dark-900 dark:text-dark-10">{task.title}</span>
 
             </h1>
             <div className="flex gap-x-2">
 
                 {updateEnabled && (
-                    <Ring className="hover:!bg-blue-500 hover:!text-white text-blue-500">
-                        <Link to={`/edit-task/${task._id}`}>
+                    <Link to={`/tasks/${task._id}`}>
+                        <Ring className="hover:!bg-blue-500 hover:!text-white text-blue-500">
+                            <FontAwesomeIcon className="text-xs" icon={faEye}/>
+                        </Ring>
+                    </Link>
+                )}
+
+                {updateEnabled && (
+                    <Link to={`/edit-task/${task._id}`}>
+                        <Ring className="hover:!bg-blue-500 hover:!text-white text-blue-500">
                             <FontAwesomeIcon className="text-xs" icon={faPenToSquare}/>
-                        </Link>
-                    </Ring>
+                        </Ring>
+                    </Link>
                 )}
                 <Ring
                     onClick={() => handleFavorite(task)}

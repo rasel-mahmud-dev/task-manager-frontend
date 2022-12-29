@@ -9,7 +9,7 @@ import {
 import {firebaseApp} from "../../firebase";
 import api from "../../api";
 import {Dispatch} from "redux";
-import {ActionTypes, LoginAction} from "../actionTypes";
+import {ActionTypes, FetchTasksAction, LoginAction} from "../actionTypes";
 import {Auth} from "../reducers/authReducer";
 
 
@@ -123,9 +123,12 @@ export function generateAccessTokenAction(payload: { username: string, avatar: s
 
 // user login action
 export function loginOutAction() {
-    return async function (dispatch: Dispatch<LoginAction>, getState: any) {
+    return async function (dispatch: Dispatch<LoginAction | FetchTasksAction>, getState: any) {
         try {
             localStorage.removeItem("token")
+
+            // also clear logged user tasks from localstorage
+            localStorage.removeItem("tasks")
 
 
             let {authState} = getState()
@@ -139,6 +142,13 @@ export function loginOutAction() {
                 type: ActionTypes.LOGIN,
                 payload: null as unknown as Auth
             })
+
+
+            dispatch({
+                type: ActionTypes.FETCH_TASKS,
+                payload: []
+            })
+
 
         } catch (ex: any) {
 
