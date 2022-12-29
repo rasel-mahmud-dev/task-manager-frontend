@@ -1,7 +1,8 @@
 import {
     signInWithPopup,
     GoogleAuthProvider,
-    getAuth
+    getAuth,
+    signOut
 } from "firebase/auth";
 
 
@@ -108,7 +109,9 @@ export function generateAccessTokenAction(payload: { username: string, avatar: s
             if (status === 201 && data.token) {
                 localStorage.setItem("token", data.token)
                 resolve([data.user, undefined]);
-            } else {
+            } else if(status === 200) {
+                resolve([data.user, undefined]);
+            }else{
                 resolve([undefined, data.message]);
             }
         } catch (ex: any) {
@@ -117,3 +120,49 @@ export function generateAccessTokenAction(payload: { username: string, avatar: s
     });
 }
 
+
+// user login action
+export function loginOutAction() {
+    return async function (dispatch: Dispatch<LoginAction>, getState: any) {
+        try {
+            localStorage.removeItem("token")
+
+
+            let {authState} = getState()
+            // if account create by firebase then logout from google
+            if(authState && authState.auth && authState.auth.password === ""){
+                let auth = getAuth();
+                await signOut(auth)
+            }
+
+            dispatch({
+                type: ActionTypes.LOGIN,
+                payload: null as unknown as Auth
+            })
+
+        } catch (ex: any) {
+
+        }
+    }
+}
+
+
+// user login action
+export function fetchCurrentAuthUser() {
+    return async function (dispatch: Dispatch<LoginAction>) {
+        try {
+
+            let {status, data} = await api().get("/api/v1/auth/fetch-current-auth-user");
+            if (status === 200 && data) {
+
+                dispatch({
+                    type: ActionTypes.LOGIN,
+                    payload: data
+                })
+            }
+
+        } catch (ex: any) {
+
+        }
+    }
+}

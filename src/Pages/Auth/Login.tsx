@@ -11,6 +11,7 @@ import {loginAction} from "../../store/actions/authActions";
 
 import Loader from "../../components/Loader";
 import Divider from "../../components/Divider";
+import ErrorMessage from "../../components/ErrorMessage";
 
 
 const Login = () => {
@@ -105,22 +106,9 @@ const Login = () => {
 
     }
 
-
-    // // after auth change then should be redirected
-    // useEffect(() => {
-    //     if (auth) {
-    //         let redirectPath = location.state || "/";
-    //         if (loginSession.current) {
-    //             setRequestLoading(false);
-    //             navigate(redirectPath);
-    //
-    //         } else {
-    //             // console.log("redirect home")
-    //             navigate("/");
-    //         }
-    //     }
-    // }, [auth, loginSession.current]);
-
+    function handleGoogleLoginError(message: string){
+        setErrorMessage(message)
+    }
 
     return (
         <div className="container">
@@ -133,11 +121,7 @@ const Login = () => {
 
                         {requestLoading && <Loader className="mt-4"/>}
 
-                        {!requestLoading && errorMessage && (
-                            <div className="bg-red-300/50 text-red-500 p-2 rounded-md my-4">
-                                {errorMessage}
-                            </div>
-                        )}
+                        {!requestLoading && <ErrorMessage message={errorMessage}  />}
 
 
                         {Object.keys(data).map((key: DataKey) => (
@@ -145,14 +129,8 @@ const Login = () => {
                         ))}
 
 
-                        <div className="form-control mt-4">
-                            <label className="flex gap-x-1 items-center cursor-pointer">
-                                <input type="checkbox" className="checkbox checkbox-sm checkbox-primary"/>
-                                <span className="label-text">Remember me</span>
-                            </label>
-                        </div>
 
-                        <div className="text-dark-100 text-sm font-normal mt-5">
+                        <div className="text-dark-100 text-sm font-normal mt-3">
                             <h6>
                                 Forgot Password ?
                             </h6>
@@ -162,7 +140,7 @@ const Login = () => {
                         <Divider barClass="!h-0.5" text="OR"/>
 
                         {/**** social login button */}
-                        <SocialLogin/>
+                        <SocialLogin onError={handleGoogleLoginError}/>
 
 
                         <p className="text-center text-sm  mb-4 mt-6 text-dark-300">

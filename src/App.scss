@@ -30,8 +30,9 @@
 }
 
 .avatar-preview-div{
-  width: 200px;
+  width: 200px !important;
   height: auto;
   aspect-ratio: 1/1;
   object-fit: contain;
 }
+

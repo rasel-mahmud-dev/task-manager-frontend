@@ -54,7 +54,7 @@ const ImageChooser: FC<Props> = (props) => {
  
 
 	return (
-		<div className={`mt-4 flex items-start flex-col md:flex-row ${className}`}>
+		<div className={`mt-2 flex items-start flex-col md:flex-row ${className}`}>
 			<div className={`flex flex-wrap items-center gap-x-2 mb-2 md:mb-0 ${labelClass}`}>
 				{label && (
 					<label htmlFor={name} className={`block font-medium text-gray-900  flex items-center`}>

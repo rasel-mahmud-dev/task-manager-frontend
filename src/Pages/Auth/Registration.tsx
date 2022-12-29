@@ -13,6 +13,7 @@ import Loader from "../../components/Loader";
 import Divider from "../../components/Divider";
 import ImageChooser from "../../components/ImageChooser";
 import fileUpload from "../../utilities/fileUpload";
+import ErrorMessage from "../../components/ErrorMessage";
 
 
 const Registration = () => {
@@ -23,8 +24,6 @@ const Registration = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
-
-    const loginSession = useRef(null);
 
     const [requestLoading, setRequestLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -121,15 +120,16 @@ const Registration = () => {
 
             setRequestLoading(true);
 
-            // const [result, error] = await fileUpload(userInput.avatar as Blob)
-            // if(!result || error){
-            //     setErrorMessage("Image upload fail, Please try again")
-            //     return;
-            // }
+            const [result, error] = await fileUpload(userInput.avatar as Blob)
+            if(!result || error){
+                setRequestLoading(false);
+                setErrorMessage("Image upload fail, Please try again")
+                return;
+            }
             dispatch(
                 registrationAction({
                     email: userInput.email.trim(),
-                    avatar: "result.url",
+                    avatar: result.url,
                     password: userInput.password.trim(),
                     username: userInput.username.trim()
                 }, function (err) {
@@ -155,20 +155,9 @@ const Registration = () => {
     }
 
 
-    // after auth change then should be redirected
-    useEffect(() => {
-        // if (auth) {
-        //     let redirectPath = location.state || "/";
-        //     if (loginSession.current) {
-        //         setRequestLoading(false);
-        //         navigate(redirectPath);
-        //         loginSession.current = false;
-        //     } else {
-        //         // console.log("redirect home")
-        //         navigate("/");
-        //     }
-        // }
-    }, [auth, loginSession.current]);
+    function handleGoogleLoginError(message: string){
+        setErrorMessage(message)
+    }
 
 
     return (
@@ -181,13 +170,7 @@ const Registration = () => {
                         <h1 className="text-center text-2xl py-4 text-dark-900 font-bold">Registration Form</h1>
 
                         {requestLoading && <Loader className="mt-4"/>}
-
-                        {!requestLoading && errorMessage && (
-                            <div className="bg-red-300/50 text-red-500 p-2 rounded-md my-4">
-                                {errorMessage}
-                            </div>
-                        )}
-
+                        {!requestLoading && <ErrorMessage message={errorMessage}  />}
 
                         {Object.keys(data).map((key: DataKey) => key !== "avatar" ? (
                             <InputGroup {...data[key]} value={userInput[key]} />
@@ -200,7 +183,7 @@ const Registration = () => {
                         ))}
 
 
-                        <div className="text-dark-100 text-sm font-normal mt-5">
+                        <div className="text-dark-100 text-sm font-normal mt-3">
                             <h6>
                                 Forgot Password ?
                             </h6>
@@ -211,7 +194,7 @@ const Registration = () => {
                         <Divider barClass="!h-0.5" text="OR"/>
 
                         {/**** social login button */}
-                        <SocialLogin/>
+                        <SocialLogin onError={handleGoogleLoginError}/>
 
 
                         <p className="text-center  text-sm mb-4 mt-6 text-dark-300">

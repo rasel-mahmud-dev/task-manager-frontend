@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "task-manager3",
     "public": "dist",
     "ignore": [
       "firebase.json",

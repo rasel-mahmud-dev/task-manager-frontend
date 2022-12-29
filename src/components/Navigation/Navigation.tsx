@@ -4,14 +4,17 @@ import "./navigation.scss";
 import Button from "../Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faSignInAlt, faUser} from "@fortawesome/free-solid-svg-icons";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../store";
+import {loginOutAction} from "../../store/actions/authActions";
 
 
 const Navigation = () => {
 
     const {auth} = useSelector((state: RootState) => state.authState)
 
+
+    const dispatch = useDispatch<AppDispatch>();
 
     const navigate = useNavigate();
     const [expandNavigation, setExpandNavigation] = useState(false);
@@ -79,13 +82,16 @@ const Navigation = () => {
 
     function handleLogout() {
         // signOutAction();
+        dispatch(loginOutAction())
     }
 
 
     const items = [
         {path: "/", label: "Home"},
         {path: "/my-tasks", label: "My Tasks"},
+        {path: "/media", label: "Media"},
         {path: "/add-task", label: "Add Task"},
+        {path: "/my-tasks", state: {tab: 1}, label: "Completed Tasks"},
     ];
 
     function closeAuthDropdown() {
@@ -115,6 +121,7 @@ const Navigation = () => {
 
                             <NavLink key={i}
                                      end={true}
+                                     state={item?.state}
                                      onClick={() => setExpandNavigation(false)}
                                      to={item.path}
                                      className="font-medium text-base"
@@ -147,33 +154,29 @@ const Navigation = () => {
                                         <h4>{auth.username}</h4>
                                     </a>
 
-                                    <div className={`absolute w-52 card bg-white top-14 left-0 ${openAuthMenu ? "block": "hidden"}`}>
+                                    <div
+                                        className={`absolute w-52 card bg-white top-14 left-0 ${openAuthMenu ? "block" : "hidden"}`}>
                                         <a className="pt-1 flex items-center border-b-2 border-primary-200/20 pb-2">
-
-                                            <div className="flex flex-col ml-3">
-                                                <span className="text-sm font-semibold text-dark-400">{auth.username}</span>
+                                            <div className="w-6 rounded-full h-6 overflow-hidden">
+                                                <img className="w-full" src={auth.avatar} alt=""/>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span
+                                                    className="text-sm font-semibold text-dark-400">{auth.username}</span>
                                             </div>
                                         </a>
                                         <div className="mt-2">
-                                            <li className="pt-1 flex items-center gap-x-1 hover:text-primary-500">
-                                                {/*<MdSpaceDashboard className="text-xl text-dark-400" />*/}
-                                                <Link onClick={closeAuthDropdown} to={`/dashboard`}>
-                                                    Dashboard
-                                                </Link>
-                                            </li>
                                             <li
                                                 className="pt-1 flex items-center gap-x-1 cursor-pointer hover:text-primary-500"
                                                 onClick={handleLogout}
-                                            >
-
-                                                Logout
+                                            >Logout
                                             </li>
                                         </div>
                                     </div>
                                 </div>
                             ) : (
                                 <NavLink to="/login">
-                                    <FontAwesomeIcon icon={faSignInAlt}/>
+                                    <FontAwesomeIcon icon={faSignInAlt} className={"text-sm mr-1"}/>
                                     Login
                                 </NavLink>
                             )}

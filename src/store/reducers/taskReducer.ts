@@ -1,5 +1,5 @@
 import {ActionTypes, TaskActions} from "../actionTypes";
-import store from "../index";
+import {setTasksInLocalStorage} from "../actions/taskActions";
 
 
 export interface Task {
@@ -28,6 +28,7 @@ const taskState: TaskState = {
 function taskReducer(state = taskState, action: TaskActions) {
     let updatedTasks: Task[] = []
     let findTaskIndex = -1
+
     switch (action.type) {
         case ActionTypes.FETCH_TASKS :
             return {
@@ -36,10 +37,25 @@ function taskReducer(state = taskState, action: TaskActions) {
             }
 
         case ActionTypes.ADD_TASK :
+            updatedTasks = [action.payload, ...state.tasks]
+            setTasksInLocalStorage(updatedTasks)
             return {
                 ...state,
-                tasks: [action.payload, ...state.tasks]
+                tasks: updatedTasks
             }
+
+        case ActionTypes.UPDATE_TASK :
+            updatedTasks = [...state.tasks]
+            findTaskIndex = updatedTasks.findIndex(task => task._id === action.payload._id)
+            if (findTaskIndex !== -1) {
+                updatedTasks[findTaskIndex] = action.payload
+            }
+            setTasksInLocalStorage(updatedTasks)
+            return {
+                ...state,
+                tasks: updatedTasks
+            }
+
 
         case ActionTypes.TOGGLE_FAVORITE :
             updatedTasks = [...state.tasks]
@@ -47,7 +63,7 @@ function taskReducer(state = taskState, action: TaskActions) {
             if (findTaskIndex !== -1) {
                 updatedTasks[findTaskIndex].isFavorite = !updatedTasks[findTaskIndex].isFavorite
             }
-            console.log(updatedTasks)
+            setTasksInLocalStorage(updatedTasks)
             return {
                 ...state,
                 tasks: updatedTasks
@@ -59,6 +75,7 @@ function taskReducer(state = taskState, action: TaskActions) {
             if (findTaskIndex !== -1) {
                 updatedTasks[findTaskIndex].isCompleted = !updatedTasks[findTaskIndex].isCompleted
             }
+            setTasksInLocalStorage(updatedTasks)
             return {
                 ...state,
                 tasks: updatedTasks
@@ -71,6 +88,7 @@ function taskReducer(state = taskState, action: TaskActions) {
             if (findTaskIndex !== -1) {
                 updatedTasks[findTaskIndex].isDeleted = !updatedTasks[findTaskIndex].isDeleted
             }
+            setTasksInLocalStorage(updatedTasks)
             return {
                 ...state,
                 tasks: updatedTasks

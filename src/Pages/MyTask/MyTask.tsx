@@ -2,6 +2,7 @@ import React, {ReactNode, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Task} from "../../store/reducers/taskReducer";
 import {AppDispatch, RootState} from "../../store";
+
 import {
     fetchTasksAction,
 } from "../../store/actions/taskActions";
@@ -9,7 +10,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate, useNavigation} from "react-router-dom";
 import BgAnimation from "../../components/BgAnimation/BgAnimation";
 import RenderTask from "../../components/RenderTask";
 
@@ -17,8 +18,12 @@ const MyTask = () => {
     const {taskState: {tasks}} = useSelector((state: RootState) => state)
     const dispatch = useDispatch<AppDispatch>()
 
+    const location = useLocation();
+
     useEffect(() => {
-        dispatch(fetchTasksAction())
+        if (tasks.length === 0) {
+            dispatch(fetchTasksAction())
+        }
     }, [])
 
 
@@ -28,18 +33,20 @@ const MyTask = () => {
         {label: "Deleted", render: renderDeleted},
     ]
 
-    const [currentTab, setCurrentTab] = useState<{
-        render: ()=> ReactNode,
-        label: string
-    } | null>(null)
+    const [currentTab, setCurrentTab] = useState<number>(0)
 
 
-    useEffect(()=>{
-        if(currentTab === null && tasks.length > 0){
-            setCurrentTab(tabs[0])
+    useEffect(() => {
+        if (location.state && location.state.tab !== undefined) {
+            setCurrentTab(location.state.tab)
+
+        } else {
+            if (currentTab === null && tasks?.length > 0) {
+                setCurrentTab(0)
+            }
         }
-    }, [tasks])
-
+        location.state = null
+    }, [tasks, location.state])
 
 
     function renderCurrentList() {
@@ -48,14 +55,14 @@ const MyTask = () => {
                 <div className="card mx-auto bg-opacity-50 backdrop-blur">
                     <h4 className="font-semibold text-xs uppercase">Starred</h4>
                     {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && task.isFavorite) && (
-                        <RenderTask task={task} key={task._id}/>
+                        <RenderTask updateEnabled={true} task={task} key={task._id}/>
                     ))}
                 </div>
 
                 <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
                     <h4 className="font-semibold text-xs uppercase">Not Starred</h4>
                     {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && !task.isFavorite) && (
-                        <RenderTask task={task} key={task._id}/>
+                        <RenderTask updateEnabled={true} task={task} key={task._id}/>
                     ))}
                 </div>
             </>
@@ -104,22 +111,26 @@ const MyTask = () => {
                 </div>
 
 
-               <div className='card flex justify-between bg-opacity-50 backdrop-blur mb-4'>
-                   <div className="flex items-center gap-x-4">
-                       {tabs.map((tab) => (
-                           <li onClick={() => setCurrentTab(tab)}
-                               className={` text-sm font-semibold list-none cursor-pointer ${currentTab?.label === tab.label ? "text-blue-600 font-medium" : ""}`}>{tab.label}</li>
-                       ))}
-                   </div>
-                   <li className={`list-none cursor-pointer text-sm font-semibold `}>
-                       <Link to="/add-task">
-                           <FontAwesomeIcon className="text-xs mr-1" icon={faPlus} />
-                           Add
-                       </Link>
-                   </li>
-               </div>
+                <div className='card flex justify-between bg-opacity-50 backdrop-blur mb-4'>
+                    <div className="flex items-center gap-x-4">
+                        {tabs.map((tab, index) => (
+                            <li key={tab.label} onClick={() => setCurrentTab(index)}
+                                className={` text-sm font-semibold list-none cursor-pointer ${currentTab === index ? "text-blue-600 font-medium" : ""}`}>{tab.label}</li>
+                        ))}
+                    </div>
+                    <li className={`list-none cursor-pointer text-sm font-semibold `}>
+                        <Link to="/add-task">
+                            <FontAwesomeIcon className="text-xs mr-1" icon={faPlus}/>
+                            Add
+                        </Link>
+                    </li>
+                </div>
 
-                { currentTab?.render() }
+                {tabs.map((tab, index) => (
+                    <div>
+                        {currentTab === index && tab.render()}
+                    </div>
+                ))}
 
 
             </div>
