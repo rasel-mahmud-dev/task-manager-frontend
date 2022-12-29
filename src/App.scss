@@ -1,4 +1,6 @@
 
+@import "src/sass/--mixin";
+
 .container{
   max-width: 1000px !important;
   margin: 0 auto;
@@ -36,3 +38,25 @@
   object-fit: contain;
 }
 
+.masonry-gallery{
+  column-count: 4;
+  .card{
+    margin: 15px 0;
+    background-color: hsla(0,0%,100%,.5);
+    overflow: hidden;
+  }
+
+  @include getDown(1024px){
+    column-count: 3;
+  }
+  @include getDown(768px){
+    column-count: 3;
+  }
+  @include getDown(600px){
+    column-count: 2;
+  }
+  @include getDown(380px){
+    column-count: 1;
+  }
+
+}

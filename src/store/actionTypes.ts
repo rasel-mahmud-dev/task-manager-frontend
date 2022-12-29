@@ -10,6 +10,7 @@ export enum ActionTypes{
     TOGGLE_COMPLETED = "TOGGLE_COMPLETED",
     DELETE = "DELETE",
     LOGIN = "LOGIN",
+    SORT = "SORT",
 }
 
 
@@ -43,7 +44,12 @@ export type DeleteAction = {
     payload: string
 }
 
-export type TaskActions = FetchTasksAction | AddTaskAction | ToggleFavoriteAction | ToggleCompleteAction | DeleteAction | UpdateTaskAction
+export type SortAction = {
+    type: ActionTypes.SORT,
+    payload: { field: string, order: number }
+}
+
+export type TaskActions = FetchTasksAction | AddTaskAction | ToggleFavoriteAction | ToggleCompleteAction | DeleteAction | UpdateTaskAction | SortAction
 
 
 

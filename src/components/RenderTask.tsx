@@ -53,8 +53,7 @@ const RenderTask: FC<RenderTaskProps> = ({task, updateEnabled = false, className
             <div className="flex gap-x-2">
 
                 {updateEnabled && (
-                    <Ring className="hover:!bg-blue-500 hover:!text-white text-blue-500"
-                          onClick={() => handleDelete(task)}>
+                    <Ring className="hover:!bg-blue-500 hover:!text-white text-blue-500">
                         <Link to={`/edit-task/${task._id}`}>
                             <FontAwesomeIcon className="text-xs" icon={faPenToSquare}/>
                         </Link>

@@ -10,17 +10,18 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 
 const Media = () => {
 
-    const { tasks } = useSelector((state: RootState)=> state.taskState )
+    const {tasks} = useSelector((state: RootState) => state.taskState)
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
-        if(tasks.length === 0) {
+        if (tasks.length === 0) {
             dispatch(fetchTasksAction())
         }
     }, [])
 
     return (
 
+        <div className="container">
             <div className="max-w-3xl mx-auto">
                 <BgAnimation/>
 
@@ -38,21 +39,19 @@ const Media = () => {
                     </div>
 
 
-
-                <div className="grid grid-cols-4 gap-4">
-
-                    { tasks?.map(task=>(
-                        <div className="card">
-                            <div className="w-40 mx-auto text-sm">
-                                <img className="w-full" src={task?.image} alt="task-image"/>
+                    <div className="masonry-gallery gap-4">
+                        {tasks?.map(task => (
+                            <div className="card">
+                                <div className="w-40 mx-auto text-sm">
+                                    <img className="w-full" src={task?.image} alt="task-image"/>
+                                </div>
+                                <h4 className="text-sm text-center font-normal py-4 break-all">{task.title}</h4>
                             </div>
-                            <h4 className="text-sm font-normal py-4">{task.title}</h4>
-                        </div>
-                    )) }
+                        ))}
+                    </div>
+
                 </div>
-
-
-        </div>
+            </div>
         </div>
     );
 };

@@ -4,7 +4,7 @@ import {
     ActionTypes,
     AddTaskAction,
     DeleteAction,
-    FetchTasksAction,
+    FetchTasksAction, SortAction,
     ToggleCompleteAction,
     ToggleFavoriteAction, UpdateTaskAction
 } from "../actionTypes";
@@ -72,7 +72,7 @@ export const addTaskAction = (taskData: Task, callback: () => void) => async (di
         } else {
             // if user logged in then store their localstorage
             let tasks = fetchTasksFromLocalStorage()
-            tasks.push({...taskData, _id: Date.now().toString()})
+            tasks.push({...taskData, _id: Date.now().toString(), createdAt: new Date()})
             setTasksInLocalStorage(tasks)
             dispatch({
                 type: ActionTypes.FETCH_TASKS,
@@ -224,4 +224,13 @@ export const syncTasksData = () => async (dispatch: Dispatch<FetchTasksAction>, 
 }
 
 
+
+
+// delete task action
+export const sortHandlerAction = (sortData: { field: string, order: number }) :  SortAction => {
+    return {
+        type: ActionTypes.SORT,
+        payload: sortData
+    }
+}
 

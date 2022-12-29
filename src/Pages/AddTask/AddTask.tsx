@@ -87,7 +87,7 @@ const AddTask = () => {
         setRequestLoading(true);
 
         const [result, error] = await fileUpload(image)
-        if(!result || error){
+        if(error){
             setErrorMessage("Image upload fail, Please try again")
             setRequestLoading(false);
             return;
@@ -97,7 +97,7 @@ const AddTask = () => {
         // update task
             dispatch(updateTaskAction({
                 ...newTaskData,
-                image: result.url
+                image: result?.url || ""
             }, () => {
                 navigate("/my-tasks")
             }))
@@ -106,7 +106,7 @@ const AddTask = () => {
             // add new task
             dispatch(addTaskAction({
                 ...newTaskData,
-                image: result.url
+                image: result?.url || ""
             }, () => {
                 navigate("/my-tasks")
             }))
