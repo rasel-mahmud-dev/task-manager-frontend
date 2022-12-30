@@ -19,11 +19,13 @@ export interface Task {
 
 interface TaskState {
     tasks: Task[],
+    loadTasks: boolean,
     sort: { field: string, order: number }
 }
 
 const taskState: TaskState = {
     tasks: [],
+    loadTasks: false,
     sort: { field: "createdAt", order: -1 } // 1 asc and -1 for desc
 }
 
@@ -40,6 +42,7 @@ function taskReducer(state = taskState, action: TaskActions) {
 
             return {
                 ...state,
+                loadTasks: true,
                 tasks: sortedArr
             }
 

@@ -6,9 +6,9 @@ import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
 import {Task} from "../store/reducers/taskReducer";
 import {deleteAction, toggleCompleteAction, toggleFavoriteAction} from "../store/actions/taskActions";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "../store";
-import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../store";
+import {Link, useNavigate} from "react-router-dom";
 
 type RenderTaskProps = {
     task: Task
@@ -19,7 +19,10 @@ type RenderTaskProps = {
 
 const RenderTask: FC<RenderTaskProps> = ({task, updateEnabled = false, className = ""}) => {
 
+    const {auth} = useSelector((state: RootState) => state.authState)
+
     const dispatch = useDispatch<AppDispatch>()
+    const navigate = useNavigate();
 
 
     function handleFavorite(task: Task) {
@@ -33,6 +36,15 @@ const RenderTask: FC<RenderTaskProps> = ({task, updateEnabled = false, className
 
     function handleToggleComplete(task: Task) {
         dispatch(toggleCompleteAction(task._id as string, task.isCompleted))
+    }
+
+
+    function handleGoDetail(id: string) {
+        if (auth) {
+            navigate("/detail/" + id)
+        } else {
+            navigate("/login", {state: "/my-tasks"})
+        }
     }
 
 
@@ -53,11 +65,12 @@ const RenderTask: FC<RenderTaskProps> = ({task, updateEnabled = false, className
             <div className="flex gap-x-2">
 
                 {updateEnabled && (
-                    <Link to={`/tasks/${task._id}`}>
-                        <Ring className="hover:!bg-blue-500 hover:!text-white text-blue-500">
-                            <FontAwesomeIcon className="text-xs" icon={faEye}/>
-                        </Ring>
-                    </Link>
+
+                    <Ring onClick={() => handleGoDetail(task._id as string)}
+                          className="hover:!bg-blue-500 hover:!text-white text-blue-500">
+                        <FontAwesomeIcon className="text-xs" icon={faEye}/>
+                    </Ring>
+
                 )}
 
                 {updateEnabled && (

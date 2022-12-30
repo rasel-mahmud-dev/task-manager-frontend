@@ -7,10 +7,11 @@ import {Link} from "react-router-dom";
 import Button from "../../components/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import Loader from "../../components/Loader";
 
 const Media = () => {
 
-    const {tasks} = useSelector((state: RootState) => state.taskState)
+    const {tasks, loadTasks} = useSelector((state: RootState) => state.taskState)
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
@@ -38,6 +39,7 @@ const Media = () => {
                         </Link>
                     </div>
 
+                    { !loadTasks && <Loader /> }
 
                     <div className="masonry-gallery gap-4">
                         {tasks?.map(task => (

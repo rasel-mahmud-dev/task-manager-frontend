@@ -3,19 +3,20 @@ import BgAnimation from "../../components/BgAnimation/BgAnimation";
 import {Link, useParams} from "react-router-dom";
 import Button from "../../components/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {deleteAction, fetchTask, toggleFavoriteAction} from "../../store/actions/taskActions";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../store";
 import {Task} from "../../store/reducers/taskReducer";
 import Ring from "../../components/Ring";
 import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
+import Loader from "../../components/Loader";
 
 const Detail = () => {
 
     const {taskId} = useParams()
     const dispatch = useDispatch<AppDispatch>()
     const [taskDetail, setTaskDetail] = useState<Task>(null as unknown as Task)
+    const [taskLoading, setTaskLoading] = useState<boolean>(false)
 
     useEffect(() => {
         if (taskId) {
@@ -23,6 +24,9 @@ const Detail = () => {
                 let [data, error] = await fetchTask<Task>(taskId)
                 if(!error && data){
                     setTaskDetail(data)
+                    setTaskLoading(true)
+                } else {
+                    setTaskLoading(true)
                 }
             }())
         }
@@ -58,7 +62,7 @@ const Detail = () => {
                 </div>
 
 
-                { taskDetail ? <div className="card">
+                { taskDetail && ( <div className="card">
                     <div>
                         <div className="flex justify-between border-b pb-2">
                         <h4 className="text-xl font-semibold">{taskDetail.title}</h4>
@@ -82,7 +86,13 @@ const Detail = () => {
 
 
                     </div>
-                </div> : (
+                </div>)}
+
+                { !taskLoading && (
+                    <Loader />
+                ) }
+
+                { taskLoading && !taskDetail  && (
                     <div className="card text-center">
                         <h4 className="text-xl font-semibold mb-3">Task not found</h4>
                         <Link to="/my-tasks" className=""><Button>Go to My Tasks</Button></Link>

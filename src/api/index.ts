@@ -1,5 +1,5 @@
 import axios from "axios"
-const backend = "https://task-manager-vert.vercel.app"
+const backend = import.meta.env.DEV ? "http://localhost:1000" : "https://task-manager-vert.vercel.app"
 
 const instance = axios.create({
     baseURL: backend,

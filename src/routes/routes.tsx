@@ -7,12 +7,14 @@ import Login from "../pages/Auth/Login";
 import Registration from "../pages/Auth/Registration";
 import Media from "../pages/Media/Media";
 import Detail from "../pages/Detail/Detail";
+import ErrorPage from "../components/ErrorPage";
 
 
 const routes = createBrowserRouter([
     {
         path: '/',
         element: <Main/>,
+        errorElement: <ErrorPage />,
         children: [
             {path: "/", element: <HomePage/>},
             {path: "/my-tasks", element: <MyTask/>},

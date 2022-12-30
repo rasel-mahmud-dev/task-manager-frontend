@@ -13,13 +13,16 @@ import Button from "../../components/Button";
 import {Link, useLocation, useNavigate, useNavigation} from "react-router-dom";
 import BgAnimation from "../../components/BgAnimation/BgAnimation";
 import RenderTask from "../../components/RenderTask";
+import Loader from "../../components/Loader";
 
 
 const MyTask = () => {
-    const {taskState: {tasks, sort}} = useSelector((state: RootState) => state)
+    const {taskState: {tasks, loadTasks, sort}, authState: { auth }} = useSelector((state: RootState) => state)
     const dispatch = useDispatch<AppDispatch>()
 
     const location = useLocation();
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (tasks.length === 0) {
@@ -55,6 +58,7 @@ const MyTask = () => {
             <>
                 <div className="card mx-auto bg-opacity-50 backdrop-blur">
                     <h4 className="font-semibold text-xs uppercase text-dark-900 dark:text-dark-10">Starred</h4>
+                    { !loadTasks && <Loader /> }
                     {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && task.isFavorite) && (
                         <RenderTask updateEnabled={true} task={task} key={task._id}/>
                     ))}
@@ -62,6 +66,7 @@ const MyTask = () => {
 
                 <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
                     <h4 className="font-semibold text-xs uppercase text-dark-900 dark:text-dark-10">Not Starred</h4>
+                    { !loadTasks && <Loader /> }
                     {tasks.map((task: Task) => (!task.isCompleted && !task.isDeleted && !task.isFavorite) && (
                         <RenderTask updateEnabled={true} task={task} key={task._id}/>
                     ))}
@@ -73,6 +78,7 @@ const MyTask = () => {
     function renderCompleted() {
         return <>
             <h4 className="font-semibold text-xs uppercase mt-10  text-dark-900 dark:text-dark-10 ">Completed</h4>
+            { !loadTasks && <Loader /> }
             <div className="card mx-auto mt-4 bg-opacity-50 backdrop-blur">
                 {tasks.map((task: Task) => !task.isDeleted && task.isCompleted && (
                     <RenderTask task={task} key={task._id}/>
@@ -135,6 +141,7 @@ const MyTask = () => {
         )
     }
 
+    
 
     return (
         <div className="container">
@@ -176,8 +183,6 @@ const MyTask = () => {
                         {currentTab === index && tab.render()}
                     </div>
                 ))}
-
-
             </div>
         </div>
     );

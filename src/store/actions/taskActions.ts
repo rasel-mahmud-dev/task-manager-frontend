@@ -14,7 +14,7 @@ import {RootState} from "../index";
 
 export const fetchTasksAction = () => async (dispatch: Dispatch<FetchTasksAction>, getState: () => RootState) => {
     try {
-        const {auth} = getState().authState
+        const {auth, authLoading} = getState().authState
 
         let tasks = []
 
@@ -205,21 +205,25 @@ export function setTasksInLocalStorage(tasks: Task[]) {
 
 // sync tasks
 export const syncTasksData = () => async (dispatch: Dispatch<FetchTasksAction>, getState: () => RootState) => {
+
+    let tasks = fetchTasksFromLocalStorage()
+
+
+
     try {
-        let tasks = fetchTasksFromLocalStorage()
         let {data, status} = await api().post("/api/v1/tasks/sync", {tasks})
         if (status === 201) {
             dispatch({
                 type: ActionTypes.FETCH_TASKS,
                 payload: data
             })
-
-            // remove local cache tasks
-            localStorage.removeItem("tasks")
         }
 
     } catch (ex) {
 
+    } finally {
+        // remove local cache tasks
+        localStorage.removeItem("tasks")
     }
 }
 
